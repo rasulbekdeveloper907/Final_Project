@@ -1,98 +1,112 @@
-# 🎯 Loyiha nomi:
-**Vaqealar Kalendari: Semantik Afisha Yig‘ish Tizimi**
+# 🧠 Tarixiy Shaxslar Umrini Bashoratlash — Classification Machine Learning Loyiha
+
+## 📌 Loyihaning qisqacha tavsifi
+
+Ushbu loyiha Machine Learning (ML) yordamida tarixiy shaxslarning qancha umr ko‘rganini **klassifikatsiya qilish** (toifalarga ajratish) maqsadida amalga oshirildi. Datasetda 2500 nafar tarixiy shaxs haqida ma’lumotlar mavjud bo‘lib, ular asosida shaxslarning umr davomiyligi quyidagi guruhlarga ajratildi:
+
+- `0-30 yosh`
+- `31-50 yosh`
+- `51-70 yosh`
+- `71+ yosh`
+
+Ma’lumotlar asosida ML modellar yordamida har bir shaxs qaysi umr guruhiga kirishini aniqlashga harakat qilinadi.
 
 ---
 
-## 📌 1. Loyiha Tavsifi
+## 📁 Ma'lumotlar (Dataset)
 
-Mazkur loyiha doirasida, foydalanuvchilar uchun konsertlar, teatrdagi sahnalar, ko‘rgazmalar, festivallar va boshqa madaniy tadbirlar haqidagi ma’lumotlarni turli saytlardan avtomatik yig‘ib, **semantik modelga asoslangan kalendar** shaklida taqdim etuvchi tizim ishlab chiqiladi.
+- **Manba**: [Dataset havolasi yoki manba nomi]
+- **Yozuvlar soni**: 2500 ta tarixiy shaxs
+- **Format**: CSV
+- **Ustunlar**:
+  - `Ism`
+  - `Tug‘ilgan yil`
+  - `Vafot etgan yil`
+  - `Kasbi`
+  - `Yashagan davri`
+  - `Asr`
+  - `Umr davomiyligi` (Target → klaslarga ajratilgan)
 
----
-
-## 🎯 2. Loyiha Maqsadi
-
-- Web scraping orqali turli manbalardan tadbir ma’lumotlarini yig‘ish  
-- Yig‘ilgan ma’lumotlarni vaqt, joy, janr, tashkilotchi kabi atributlar asosida **semantik modellashtirish**  
-- Tadbirlarni filtrlash, saralash va qidirish imkoniyatini beruvchi **foydalanuvchi interfeys** yaratish  
-
----
-
-## 🧩 3. SML: Semantik Modellashtirish
-
-### 🎭 Event (Tadbir) klassi:
-
-Event
-│
-├── name (nomi)
-├── date (sana)
-├── time (vaqt)
-├── location (joy)
-├── type (turi: konsert, teatr, ko‘rgazma...)
-├── organizer (tashkilotchi)
-├── price (narx)
-├── language (til, agar spektakl bo‘lsa)
-
-
-### 🧠 Ontologik Tuzilma (soddalashtirilgan):
-
-Thing
-│
-├── Event
-│ ├── Concert
-│ ├── Theater
-│ ├── Exhibition
-│ ├── Festival
-│
-├── Location
-│ ├── City
-│ ├── Venue
-│
-├── Organizer
-
-
-> Ushbu modelni **OWL (Web Ontology Language)** formatida yaratib, **RDF** bilan bog‘lash mumkin. SPARQL yordamida semantik qidiruvlar amalga oshiriladi.
+> **Target** (maqsadli ustun): `Umr_guruhi` (`0-30`, `31-50`, `51-70`, `71+`)
 
 ---
 
-## 🔧 4. Texnologiyalar
+## 🎯 Loyihaning maqsadi
 
-| Maqsad                   | Texnologiya yoki vosita        |
-|--------------------------|-------------------------------|
-| Web scraping             | Python (BeautifulSoup, Scrapy) |
-| Ma’lumotlar saqlash      | MongoDB / PostgreSQL / RDF Store |
-| Ontologiya yaratish      | Protégé (ontologiya modeli)   |
-| Semantik qidiruv         | SPARQL                        |
-| Backend                  | Flask / Django                |
-| Frontend (ixtiyoriy)     | React / Bootstrap             |
+Model quyidagi savolga javob beradi:
+
+> "Tarixiy shaxsning tug‘ilgan va vafot etgan yili, yashagan davri, kasbi kabi atributlarga qarab, u nechchi yoshgacha yashaganini bashorat qila olamizmi?"
 
 ---
 
-## 🌐 5. Web Scraping Nishonlari (manbalar)
+## ⚙️ Ishlatilgan texnologiyalar
 
-- https://afisha.uz  
-- https://biletonline.uz  
-- https://iTicket.uz  
-- Teatrlar, san’at galereyalari, konsert zallari saytlarining afisha bo‘limlari
-
----
-
-## 📊 6. Foydalanuvchi Uchun Imkoniyatlar
-
-- "Bugungi konsertlar"ni ko‘rish  
-- Joy, sana, turi bo‘yicha **filtrlash**  
-- "Toshkentdagi teatrdagi spektakllar" degan **semantik so‘rovlar** yuborish  
-- JSON-LD yoki RDF formatida **ma’lumotni eksport qilish**  
+- Python 3.x
+- Pandas
+- NumPy
+- Scikit-learn
+- Matplotlib / Seaborn (vizualizatsiya uchun)
+- Jupyter Notebook
 
 ---
 
-## ✅ 7. Kutilayotgan Natijalar
+## 🛠️ Ish jarayoni
 
-- Semantik modellashtirilgan **tadbirlar bazasi**  
-- Avtomatik ma’lumot yig‘uvchi **scraper**  
-- Foydalanuvchilarga qulay **qidiruv interfeysi**  
-- **SML tamoyillari asosida ontologik tizim**
+1. **Ma'lumotlarni tozalash**:  
+   - Tug‘ilgan yoki vafot etgan sanasi yo‘q yozuvlar o‘chirildi
+   - Noto‘g‘ri va manfiy qiymatlar filtrlandi
+
+2. **Feature Engineering**:
+   - `Umr = Vafot etgan yil - Tug‘ilgan yil`
+   - `Umr` ustuni asosida toifalarga ajratilgan `Umr_guruhi` yaratildi
+   - Asr, kasb va davr kabi ustunlar sonli formatga o‘tkazildi (`LabelEncoder`, `OneHotEncoder`)
+
+3. **Model tanlash va o‘qitish**:
+   - `Support Vector Machine (SVM)`
+   - `K-Nearest Neighbors (KNN)`
+   - `Decision Tree`
+   - `Random Forest`
+
+4. **Model baholash**:
+   - `Accuracy`
+   - `Confusion Matrix`
+   - `Classification Report (Precision, Recall, F1-score)`
 
 ---
 
-> 🧠 Loyiha ilmiy, amaliy va texnik jihatdan dolzarb bo‘lib, SML (Semantik Mantiqiy Loyihalash) yondashuvlarini chuqur o‘rganish uchun ajoyib asos bo‘ladi.
+## 📊 Natijalar
 
+| Model           | Accuracy (%) |
+|------------------|--------------|
+| SVM              | 88%          |
+| KNN              | 85%          |
+| Decision Tree    | 90%          |
+| Random Forest    | **83%** ✅   |
+
+> ✅ **Eng yaxshi model**: Random Forest — 83% aniqlik bilan to‘g‘ri tasniflagan.
+
+---
+
+## 📈 Vizualizatsiyalar
+
+- Confusion Matrix grafigi
+- Umr guruhlarining taqsimoti
+- Har bir model uchun F1-score solishtirmasi
+
+---
+
+## 🚀 Kelajakdagi ishlar
+
+- Ko‘proq atributlar qo‘shish (hudud, shaxsning statusi: podsho, sarkarda, oddiy fuqaro va h.k.)
+- Modelni balansi notekis sinflar uchun yaxshilash (class imbalance)
+- Web interfeys yaratish (Streamlit orqali)
+
+---
+
+## 💻 Ishga tushirish
+
+```bash
+git clone https://github.com/username/tarixiy-umr-klassifikatsiyasi.git
+cd tarixiy-umr-klassifikatsiyasi
+pip install -r requirements.txt
+jupyter notebook
