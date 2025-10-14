@@ -1,15 +1,10 @@
-# 🧠 Tarixiy Shaxslar Umrini Bashoratlash — Classification Machine Learning Loyiha
+# 🧠 Tarixiy Shaxslarning Kasbiga Ko‘ra Umrini Bashoratlash — Regression Machine Learning Loyiha
 
 ## 📌 Loyihaning qisqacha tavsifi
 
-Ushbu loyiha Machine Learning (ML) yordamida tarixiy shaxslarning qancha umr ko‘rganini **klassifikatsiya qilish** (toifalarga ajratish) maqsadida amalga oshirildi. Datasetda 2500 nafar tarixiy shaxs haqida ma’lumotlar mavjud bo‘lib, ular asosida shaxslarning umr davomiyligi quyidagi guruhlarga ajratildi:
+Ushbu loyiha tarixiy shaxslarning kasbi va boshqa atributlari asosida ularning umr davomiyligini **doimiy son (yillar)** sifatida bashorat qilishga qaratilgan. Maqsad — qaysi kasb egalari uzoq umr ko‘rganini aniqlash va bashorat qilish.
 
-- `0-30 yosh`
-- `31-50 yosh`
-- `51-70 yosh`
-- `71+ yosh`
-
-Ma’lumotlar asosida ML modellar yordamida har bir shaxs qaysi umr guruhiga kirishini aniqlashga harakat qilinadi.
+Datasetda 2500 dan ortiq tarixiy shaxs haqidagi ma’lumotlar mavjud bo‘lib, ularning tug‘ilgan va vafot etgan yili, kasbi, yashagan davri kabi atributlar kiritilgan.
 
 ---
 
@@ -25,17 +20,13 @@ Ma’lumotlar asosida ML modellar yordamida har bir shaxs qaysi umr guruhiga kir
   - `Kasbi`
   - `Yashagan davri`
   - `Asr`
-  - `Umr davomiyligi` (Target → klaslarga ajratilgan)
-
-> **Target** (maqsadli ustun): `Umr_guruhi` (`0-30`, `31-50`, `51-70`, `71+`)
+  - `Umr davomiyligi` (target — sonli qiymat sifatida)
 
 ---
 
 ## 🎯 Loyihaning maqsadi
 
-Model quyidagi savolga javob beradi:
-
-> "Tarixiy shaxsning tug‘ilgan va vafot etgan yili, yashagan davri, kasbi kabi atributlarga qarab, u nechchi yoshgacha yashaganini bashorat qila olamizmi?"
+> Tarixiy shaxslarning kasbiga va boshqa atributlarga asoslanib, ularning umr davomiyligini yillar bo‘yicha aniq bashorat qilish.
 
 ---
 
@@ -45,6 +36,7 @@ Model quyidagi savolga javob beradi:
 - Pandas
 - NumPy
 - Scikit-learn
+- XGBoost
 - Matplotlib / Seaborn (vizualizatsiya uchun)
 - Jupyter Notebook
 
@@ -52,61 +44,67 @@ Model quyidagi savolga javob beradi:
 
 ## 🛠️ Ish jarayoni
 
-1. **Ma'lumotlarni tozalash**:  
-   - Tug‘ilgan yoki vafot etgan sanasi yo‘q yozuvlar o‘chirildi
-   - Noto‘g‘ri va manfiy qiymatlar filtrlandi
+1. **Ma'lumotlarni tozalash**  
+   - Tug‘ilgan yoki vafot etgan yili bo‘lmagan yozuvlarni olib tashlash  
+   - Noto‘g‘ri va manfiy qiymatlarni filtr qilish  
 
-2. **Feature Engineering**:
-   - `Umr = Vafot etgan yil - Tug‘ilgan yil`
-   - `Umr` ustuni asosida toifalarga ajratilgan `Umr_guruhi` yaratildi
-   - Asr, kasb va davr kabi ustunlar sonli formatga o‘tkazildi (`LabelEncoder`, `OneHotEncoder`)
+2. **Feature Engineering**  
+   - `Umr = Vafot etgan yil - Tug‘ilgan yil` sifatida hisoblash  
+   - Kasb, asr va yashagan davr kabi kategorik ustunlarni raqamli formatga o'tkazish (`LabelEncoder`, `OneHotEncoder`)  
 
-3. **Model tanlash va o‘qitish**:
-   - `Support Vector Machine (SVM)`
-   - `K-Nearest Neighbors (KNN)`
-   - `Decision Tree`
-   - `Random Forest`
+3. **Model tanlash va o‘qitish**  
+   - Decision Tree Regressor  
+   - Random Forest Regressor  
+   - Linear Regression  
+   - XGBoost Regressor  
 
-4. **Model baholash**:
-   - `Accuracy`
-   - `Confusion Matrix`
-   - `Classification Report (Precision, Recall, F1-score)`
+4. **Model baholash**  
+   - R² (R-squared) balli orqali aniqlik baholandi  
 
 ---
 
 ## 📊 Natijalar
 
-| Model           | Accuracy (%) |
-|------------------|--------------|
-| SVM              | 88%          |
-| KNN              | 85%          |
-| Decision Tree    | 90%          |
-| Random Forest    | **83%** ✅   |
+| Model               | R² balli (%) |
+|---------------------|--------------|
+| Decision Tree       | 100.0%       |
+| Random Forest       | 91.0%        |
+| Linear Regression   | 20.0%        |
+| XGBoost             | 99.0%        |
 
-> ✅ **Eng yaxshi model**: Random Forest — 83% aniqlik bilan to‘g‘ri tasniflagan.
+> ✅ **Eng yaxshi natija**: Decision Tree Regressor — 100% R² balli bilan.
 
 ---
 
 ## 📈 Vizualizatsiyalar
 
-- Confusion Matrix grafigi
-- Umr guruhlarining taqsimoti
-- Har bir model uchun F1-score solishtirmasi
+- Kasb bo‘yicha umr davomiyligi taqsimoti  
+- Modellarning R² ballarini solishtirish grafigi  
+- Predict va actual qiymatlar taqqoslanishi grafigi  
 
 ---
 
-## 🚀 Kelajakdagi ishlar
+## 🚀 Kelajakdagi reja
 
-- Ko‘proq atributlar qo‘shish (hudud, shaxsning statusi: podsho, sarkarda, oddiy fuqaro va h.k.)
-- Modelni balansi notekis sinflar uchun yaxshilash (class imbalance)
-- Web interfeys yaratish (Streamlit orqali)
+- Qo‘shimcha atributlar kiritish (hudud, shaxsning ijtimoiy mavqei va boshqalar)  
+- Modelni yanada yaxshilash uchun hyperparameter tuning  
+- Kross-valyadatsiya asosida model barqarorligini oshirish  
+- Interaktiv web-interfeys yaratish (Streamlit yoki Flask)  
 
 ---
 
-## 💻 Ishga tushirish
+## 💻 Loyihani ishga tushirish
 
 ```bash
-git clone https://github.com/username/tarixiy-umr-klassifikatsiyasi.git
-cd tarixiy-umr-klassifikatsiyasi
+git clone https://github.com/username/tarixiy-kasb-umr-bashorati.git
+cd tarixiy-kasb-umr-bashorati
 pip install -r requirements.txt
 jupyter notebook
+
+
+📞 Aloqa
+
+Loyihaga oid savollar uchun:
+Email: rassiazzi9218@gmail.com
+
+GitHub: https://github.com/rasulbekdeveloper907
