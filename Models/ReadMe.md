@@ -37,10 +37,10 @@ Bu bo‘limda biz tarixiy shaxslarning umr davomiyligini (ya'ni `life_span`) tur
 
 | Fayl nomi                 | Taqdim etilgan maqsad            |
 | ------------------------- | -------------------------------- |
-| `linear_model.pkl`        | `LinearRegression()` obyekt      |
-| `decision_tree_model.pkl` | `DecisionTreeRegressor()` obyekt |
-| `random_forest_model.pkl` | `RandomForestRegressor()` obyekt |
-| `xgb_model.pkl`           | `XGBRegressor()` obyekt          |
+| `linear_model.joblib`        | `LinearRegression()` obyekt      |
+| `decision_tree_model.joblib` | `DecisionTreeRegressor()` obyekt |
+| `random_forest_model.joblib` | `RandomForestRegressor()` obyekt |
+| `xgb_model.joblib`           | `XGBRegressor()` obyekt          |
 
 
 🧠 Xulosa
@@ -63,10 +63,10 @@ Linear Regression juda past natija ko‘rsatdi — bu model bu tipdagi murakkab 
 
 📂 Fayl tuzilmasi (Models/ papkasi)
  Models/
-├── decision_tree_model.pkl
-├── random_forest_model.pkl
-├── xgb_model.pkl
-├── linear_model.pkl
+├── decision_tree_model.joblib
+├── random_forest_model.joblib
+├── xgb_model.joblib
+├── linear_model.joblib
 ├── model_utils.py
 ├── model_training.ipynb
 └── README.md
