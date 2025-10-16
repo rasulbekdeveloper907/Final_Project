@@ -1,62 +1,44 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
+import os
+import logging
 
-def load_features(features_path):
-    """
-    CSV fayldan features (X) ni yuklaydi.
-    
-    Args:
-        features_path (str): Features CSV fayl yo'li.
-        
-    Returns:
-        pd.DataFrame: Features DataFrame.
-    """
-    X = pd.read_csv(features_path)
-    return X
+# Logging sozlash
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
-def load_target(target_path):
-    """
-    CSV fayldan target (y) ni yuklaydi.
-    
-    Args:
-        target_path (str): Target CSV fayl yo'li.
-        
-    Returns:
-        pd.Series: Target Series.
-    """
-    y = pd.read_csv(target_path).squeeze()
-    return y
+class DataLoader:
+    def __init__(self, folder_path):
+        self.folder_path = folder_path
 
-def load_data(features_path, target_path, test_size=0.2, random_state=42):
-    """
-    Features va target ni yuklab, train-test ga ajratadi.
-    
-    Args:
-        features_path (str): Features CSV fayl yo'li.
-        target_path (str): Target CSV fayl yo'li.
-        test_size (float): Test uchun foiz (0-1 oralig'ida).
-        random_state (int): Random holat uchun urug'.
-        
-    Returns:
-        tuple: X_train, X_test, y_train, y_test
-    """
-    X = load_features(features_path)
-    y = load_target(target_path)
-    
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=random_state
-    )
-    
-    print(f"Train X shape: {X_train.shape}")
-    print(f"Test X shape: {X_test.shape}")
-    print(f"Train y shape: {y_train.shape}")
-    print(f"Test y shape: {y_test.shape}")
-    
-    return X_train, X_test, y_train, y_test
+    def load_datasets(self):
+        # 1. Papka mavjudligini tekshirish
+        if not os.path.isdir(self.folder_path):
+            logging.error(f"Papka topilmadi: {self.folder_path}")
+            return pd.DataFrame()
 
-if __name__ == "__main__":
-    # Test uchun misol yo'llar (o'zgartiring)
-    features_path = r"C:\Users\Rasulbek907\Desktop\SML_2_Pr\Data\feature_selection\selected_features.csv"
-    target_path = r"C:\Users\Rasulbek907\Desktop\SML_2_Pr\Data\feature_selection\target_num_orders.csv"
-    
-    load_data(features_path, target_path)
+        # 2. Papkadagi CSV fayllarni topish
+        csv_files = [f for f in os.listdir(self.folder_path) if f.endswith('.csv')]
+        if not csv_files:
+            logging.warning("Papkada hech qanday CSV fayl topilmadi.")
+            return pd.DataFrame()
+
+        df_list = []
+
+        # 3. Har bir CSV faylni o‘qib, ro‘yxatga qo‘shish
+        for file in csv_files:
+            file_path = os.path.join(self.folder_path, file)
+            try:
+                df = pd.read_csv(file_path)
+                df['source_file'] = file  # Qaysi fayldan kelganini belgilash
+                df_list.append(df)
+                logging.info(f"Yuklandi: {file}")
+            except Exception as e:
+                logging.error(f"Xatolik '{file}' faylni yuklashda: {e}")
+
+        # 4. Barcha fayllarni birlashtirish
+        try:
+            full_df = pd.concat(df_list, ignore_index=True)
+            logging.info(f"Umumiy data yuklandi. Shakli: {full_df.shape}")
+            return full_df
+        except Exception as e:
+            logging.error(f"DataFrame birlashtirishda xatolik: {e}")
+            return pd.DataFrame()
